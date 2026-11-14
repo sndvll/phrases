@@ -1,57 +1,61 @@
-# Thai Fraslista
+# Fraslista
 
-En liten fraslista för svenskar i Thailand, byggd för att **visas upp**. Svensken
-läser uttalet, thailändaren läser thai-skriften. Därför är thai-skriften alltid
+En frasapp för resande, byggd för att **visas upp**. Du läser uttalet, personen
+framför dig läser skriften på sitt eget språk. Därför är värdlandets skrift alltid
 synlig i listan och kan förstoras till helskärm.
 
-Sajten är statisk — ingen build, inga tredjepartsberoenden — och publiceras på
-**GitHub Pages**: <https://sndvll.github.io/phrases/>. Den fungerar helt offline (se nedan).
+Appen är statisk — ingen build, inga tredjepartsberoenden — och publiceras på
+**GitHub Pages**: <https://sndvll.github.io/phrases/>. Den fungerar helt offline.
+
+**Resmål i dag:** thailändska. Fler värdländer läggs till som egna filer (se
+[Två språkaxlar](#två-språkaxlar)) — inget i koden är bundet till thai.
 
 ## Funktioner
 
 | Funktion | Beskrivning |
 |---|---|
-| Karusell | Tre sidor (Hälsningar / Mat & nota / Smak & specialkost), swipe + tabs + prickar |
-| Fraslista | Gästspråkets etikett + thai-skrift i listan, uttal under |
-| Tryck på en fras | Går **direkt** till helskärm: thai-skrift i `15vw`, uttal och betydelse under |
+| Karusell | Kategorier som swipeas igenom, med flikar och prickar |
+| Fraslista | Gästspråkets etikett + värdlandets skrift i listan, uttal under |
+| Tryck på en fras | Går **direkt** till helskärm: skriften i `15vw`, uttal och betydelse under |
 | Flera fraser | **Långtryck** på ett kort (eller listikonen) startar markeringsläget → swipebar helskärmsserie med räknare |
-| Man / Kvinna | Byter artighetsändelse i alla fraser: ครับ/krub eller ค่ะ/kha (คะ i frågor) |
-| Ägg-läge | Växlar den vegetariska frasen mellan มังสวิรัติ (ägg okej) och ไม่ใส่ไข่ |
+| Man / Kvinna | Byter artighetsändelse i alla fraser när språket har en (thai: ครับ/krub eller ค่ะ/kha, คะ i frågor) |
+| Ägg-läge | Växlar fraser som har en variant, t.ex. vegetariskt med och utan ägg |
 | Språk | Välj gästspråk (svenska/engelska) i språkmenyn (jordgloben) |
 
 Inställningarna sparas i `localStorage`.
-
-## Tema
-
-Appen följer systemtemat via `prefers-color-scheme` — mörkt (OLED-svart) eller ljust.
-Alla färger är CSS-variabler i `:root` med en ljus override; kategorifärgerna är
-`--acc-greet` / `--acc-food` / `--acc-spice` / `--acc-night` och har egna, mörkare
-värden i ljust läge för att behålla kontrast.
-
-I installerat läge (PWA) byter appen även `apple-mobile-web-app-status-bar-style`
-mellan `black-translucent` (mörkt) och `default` (ljust), eftersom iOS inte låter
-statusradens text färg följa en CSS-mediafråga.
 
 ## Två språkaxlar
 
 | Axel | Betydelse | Fil |
 |---|---|---|
-| **Värd** | Språket i landet du är i — thai-skrift + uttal | `i18n/host.th.js` |
+| **Värd** | Språket i landet du är i — skrift + uttal | `i18n/host.<code>.js` |
 | **Gäst** | Ditt eget språk: UI, flikar, knappar och frasbetydelser | `i18n/guest.<code>.js` |
+
+Just nu finns `host.th.js` (thailändska) samt `guest.sv.js` och `guest.en.js`.
 
 Att lägga till ett **gästspråk** (t.ex. tyska): kopiera `guest.en.js`, byt `code`,
 `name`, `ui` och `phrases`, lägg till en `<script>`-rad i `index.html`. Saknade
 fraser faller tillbaka på svenska.
 
 Att lägga till ett **resmål** (t.ex. Japan): kopiera `host.th.js`, byt `name`,
-`native`, `parts`, `hints` och `phrases` (samma `id` som gästfilerna), registrera
-filen och sätt `state.host`. Inget i `index.html` är thai-specifikt utanför
-host-filen.
+`native`, `parts`, `hints`, kategorier och `phrases` (samma `id` som gästfilerna),
+registrera filen och välj den i `state.host`. Allt språkspecifikt — skrift, uttal,
+artighetspartiklar, varianter — bor i host-filen, aldrig i `index.html`.
+
+## Tema
+
+Appen följer systemtemat via `prefers-color-scheme` — mörkt (OLED-svart) eller ljust.
+Alla färger är CSS-variabler i `:root` med en ljus override; kategorifärgerna är
+`--acc-<id>` och har egna, mörkare värden i ljust läge för att behålla kontrast.
+
+I installerat läge (PWA) byter appen även `apple-mobile-web-app-status-bar-style`
+mellan `black-translucent` (mörkt) och `default` (ljust), eftersom iOS inte låter
+statusradens text färg följa en CSS-mediafråga.
 
 ## Offline
 
 Appen är en PWA. Vid första besöket precachas skalet (HTML, CSS, JS, i18n, manifest,
-ikoner och båda typsnitten) av `sw.js`, varefter den startar utan nät alls.
+ikoner och typsnitten) av `sw.js`, varefter den startar utan nät alls.
 
 Typsnitten är **självhostade** i `fonts/` just därför. Lägg aldrig tillbaka en
 `fonts.googleapis.com`-länk; det är den enda detalj som bryter offline-läget.
@@ -70,19 +74,19 @@ phrases/
 ├── styles.css       all CSS, teman som variabler
 ├── app.js           all logik (state, rendering, gesthantering)
 ├── i18n/
-│   ├── host.th.js   värdlandets fraser (thai-skrift + uttal)
+│   ├── host.th.js   värdlandets fraser (skrift + uttal)
 │   ├── guest.sv.js  gästspråk: svenska
 │   └── guest.en.js  gästspråk: engelska
 ├── sw.js            service worker, precache av app-skalet
 ├── manifest.webmanifest
-├── fonts/           Outfit + Noto Sans Thai (woff2, självhostade)
+├── fonts/           vikter för latin + thai (woff2, självhostade)
 ├── icons/           180 px (apple-touch) + 512 px (manifest)
 └── .nojekyll        hindrar GitHub från att Jekyll-processa sajten
 ```
 
 ## Redigera fraser
 
-Fraserna bor i `i18n/host.th.js`:
+Fraserna bor i `i18n/host.<code>.js`:
 
 ```js
 { id: 'thanks', cat: 'greet', script: 'ขอบคุณมาก{p}', latin: 'Khop khun mak {p}' }
@@ -94,19 +98,25 @@ och etiketterna för respektive gästspråk i `guest.*.js` under samma `id`:
 phrases: { thanks: 'Tack så mycket' }
 ```
 
-- `{p}` = artighetsändelsen, byts ut av krub/kha-växlaren.
-- `q: true` = fråga (ger คะ istället för ค่ะ för kvinnor).
-- `egg: {...}` = frasen har en ägg-variant (se den vegetariska).
+Fälten är generiska — `script` är värdlandets skrift, `latin` är uttalet:
 
-## Källa till fraserna
+- `{p}` = artighetsändelsen för språket, byts ut av Man/Kvinna-växlaren.
+- `q: true` = fråga (thai: คะ istället för ค่ะ för kvinnor).
+- `egg: {...}` = frasen har en variant, t.ex. vegetariskt med och utan ägg.
 
-Thai-skriften är kontrollerad mot [Wikivoyage Thai phrasebook](https://en.wikivoyage.org/wiki/Thai_phrasebook)
-och vedertagen användning. Två saker som ofta lärs ut fel och som därför medvetet
+## Källa till det thailändska innehållet
+
+Den thailändska skriften är kontrollerad mot
+[Wikivoyage Thai phrasebook](https://en.wikivoyage.org/wiki/Thai_phrasebook) och
+vedertagen användning. Två saker som ofta lärs ut fel och som därför medvetet
 avviker från turistfraser:
 
 - **Notan** = `เก็บเงินด้วย` (*kep ngern duai*), inte `เช็คบิล` (engelsk import).
 - **Ja/nej** = `ใช่` / `ไม่ใช่` betyder "stämmer/stämmer inte". Thai svarar genom att
   upprepa verbet, så etiketten är "Det stämmer" och inte "Ja".
+
+Nya värdländer bör kontrolleras på samma sätt — mot en språkkälla eller en
+modersmålstalare — innan de läggs in.
 
 ## Deploy
 

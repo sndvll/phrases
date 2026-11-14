@@ -1,13 +1,16 @@
-# AGENTS.md — Thai Fraslista
+# AGENTS.md — Fraslista
 
 > **Rotkontext:** [`../../AGENTS.md`](../../AGENTS.md) — infrastruktur, konventioner.
 > **Live:** <https://sndvll.github.io/phrases/> (GitHub Pages, `main` → root).
 
 ## Vad det är
 
-En fraslista för svenskar i Thailand, byggd för att **visas upp**: svensken läser
-uttalet, thailändaren läser thai-skriften. Därför är thai-skriften alltid synlig i
-listan och kan förstoras till helskärm.
+En frasapp för resande, byggd för att **visas upp**: användaren läser uttalet,
+personen framför läser skriften på sitt eget språk. Därför är värdlandets skrift
+alltid synlig i listan och kan förstoras till helskärm.
+
+Just nu är thailändska enda värdlandet, men inget i koden är bundet till det — allt
+språkspecifikt bor i `i18n/host.<code>.js`.
 
 Ingen app-server, ingen databas, ingen container — statiska filer som GitHub Pages
 serverar, plus en service worker som gör den offline-kapabel. Tidigare kördes den som
@@ -52,7 +55,7 @@ först (klassiska, körs vid parse), sedan `app.js` med `defer`.
 
 Regler:
 
-- **Allt som är thai-specifikt ska bo i host-filen.** `index.html` får inte
+- **Allt som är värd-specifikt ska bo i host-filen.** `index.html` får inte
   anta att `parts.m` heter `ครับ`; den läser `hostData().parts`.
 - `compose()` är den enda vägen från fras → visad text. Lägg aldrig in partikeln
   direkt i strängarna, då slutar krub/kha-växlaren fungera.
@@ -121,9 +124,10 @@ det finns ingen mellanliggande detaljmodal, helskärmen *är* detaljvyn. Räknar
 
 ## Språkliga regler
 
-- **Thai-skriften är sanningen**, latinet är bara ett uttal. Nya fraser ska ha
-  verifierad thai-skrift — kontrollera mot [Wikivoyage Thai phrasebook](https://en.wikivoyage.org/wiki/Thai_phrasebook)
-  eller en thailändsk talare innan de läggs in.
+- **Värdlandets skrift är sanningen**, latinet är bara ett uttal. Nya fraser ska ha
+  verifierad skrift — kontrollera mot en språkkälla (för thai:
+  [Wikivoyage Thai phrasebook](https://en.wikivoyage.org/wiki/Thai_phrasebook))
+  eller en modersmålstalare innan de läggs in.
 - Kända fällor som medvetet avviker från turistfraser: notan = `เก็บเงินด้วย`
   (inte `เช็คบิล`), ja/nej = `ใช่`/`ไม่ใช่` ("stämmer", inte "ja").
 - Svenska etiketter får beskriva vad frasen *betyder*, inte bara översätta ordagrant.
