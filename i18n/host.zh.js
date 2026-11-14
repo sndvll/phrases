@@ -10,6 +10,8 @@ window.HOSTS.zh = {
   native: '简体中文',
   font: "'Noto Sans SC', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, sans-serif",
 
+  hints: { eggOn: '可以', eggOff: '不要' },
+
   categories: [
     { id: 'greet' },
     { id: 'food' },
@@ -17,6 +19,7 @@ window.HOSTS.zh = {
     { id: 'shop' },
     { id: 'travel' },
     { id: 'stay' },
+    { id: 'night' },
   ],
 
   phrases: [
@@ -49,7 +52,9 @@ window.HOSTS.zh = {
     { id: 'littlespicy', cat: 'spice', script: '微辣', latin: 'Wēi là' },
     { id: 'spicy', cat: 'spice', script: '辣', latin: 'Là' },
     { id: 'veryspicy', cat: 'spice', script: '很辣', latin: 'Hěn là' },
-    { id: 'vegetarian', cat: 'spice', script: '我吃素', latin: 'Wǒ chī sù' },
+    { id: 'vegetarian', cat: 'spice', script: '我吃素', latin: 'Wǒ chī sù',
+      egg: { scriptOn: '我吃素，可以放鸡蛋', scriptOff: '我吃素，不要鸡蛋',
+             latinOn: 'Wǒ chī sù, kěyǐ fàng jīdàn', latinOff: 'Wǒ chī sù, bù yào jīdàn' } },
     { id: 'vegan', cat: 'spice', script: '我吃全素', latin: 'Wǒ chī quán sù' },
     { id: 'nomeat', cat: 'spice', script: '不要肉', latin: 'Bù yào ròu' },
     { id: 'nopork', cat: 'spice', script: '不要猪肉', latin: 'Bù yào zhūròu' },
@@ -85,5 +90,16 @@ window.HOSTS.zh = {
     { id: 'checkin', cat: 'stay', script: '几点可以入住', latin: 'Jǐ diǎn kěyǐ rùzhù', q: true },
     { id: 'checkout', cat: 'stay', script: '我要退房', latin: 'Wǒ yào tuìfáng' },
     { id: 'keepbag', cat: 'stay', script: '可以寄存行李吗', latin: 'Kěyǐ jìcún xíngli ma', q: true },
+
+    { id: 'cheers', cat: 'night', script: '干杯', latin: 'Gānbēi' },
+    { id: 'onemore', cat: 'night', script: '再来一瓶', latin: 'Zài lái yī píng' },
+    { id: 'glasswater', cat: 'night', script: '请给我一杯水', latin: 'Qǐng gěi wǒ yī bēi shuǐ' },
+    { id: 'recommend', cat: 'night', script: '有什么推荐的吗', latin: 'Yǒu shénme tuījiàn de ma', q: true },
+    { id: 'noalcohol', cat: 'night', script: '我不喝酒', latin: 'Wǒ bù hē jiǔ' },
+    { id: 'toilet', cat: 'night', script: '洗手间在哪里', latin: 'Xǐshǒujiān zài nǎlǐ', q: true },
+    { id: 'separatebill', cat: 'night', script: '分开买单', latin: 'Fēnkāi mǎidān' },
+    { id: 'paycard', cat: 'night', script: '可以刷卡吗', latin: 'Kěyǐ shuākǎ ma', q: true },
+    { id: 'closing', cat: 'night', script: '几点关门', latin: 'Jǐ diǎn guānmén', q: true },
+    { id: 'goinghome', cat: 'night', script: '我要回去了', latin: 'Wǒ yào huíqù le' },
   ],
 };

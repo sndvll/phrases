@@ -29,7 +29,10 @@
       const g = loc().phrases || {};
       if (g[p.id] != null) return g[p.id];
       const sv = (LOCALES.sv && LOCALES.sv.phrases) || {};
-      return sv[p.id] != null ? sv[p.id] : p.id;
+      if (sv[p.id] != null) return sv[p.id];
+      // Host-only concepts may carry their own label instead of being added to
+      // every guest locale.
+      return p.label || p.id;
     };
 
     /**
@@ -43,17 +46,16 @@
       const pScript = part ? part.script : '';
       const pLatin = part ? part.latin : '';
 
-      const script = (p.egg
-        ? p.script.replace('{p}', (state.eggOk ? p.egg.scriptOn : p.egg.scriptOff) + pScript)
-        : p.script.replace('{p}', pScript)
-      ).trim();
+      // An `egg` phrase ships whole alternative sentences, not suffixes, so each
+      // language can phrase the variant the way it actually speaks.
+      const eggOn = state.eggOk;
+      const scriptTpl = p.egg ? (eggOn ? p.egg.scriptOn : p.egg.scriptOff) : p.script;
+      const latinTpl = p.egg ? (eggOn ? p.egg.latinOn : p.egg.latinOff) : p.latin;
 
-      const latin = (p.egg
-        ? p.latin.replace('{p}', ((state.eggOk ? p.egg.latinOn : p.egg.latinOff) + ' ' + pLatin).trim())
-        : p.latin.replace('{p}', pLatin)
-      ).replace(/\s+/g, ' ').trim();
+      const script = scriptTpl.replace('{p}', pScript).trim();
+      const latin = latinTpl.replace('{p}', pLatin).replace(/\s+/g, ' ').trim();
 
-      const suffix = p.egg ? (state.eggOk ? loc().egg.on : loc().egg.off) : '';
+      const suffix = p.egg ? (eggOn ? loc().egg.on : loc().egg.off) : '';
       return { script, latin, guest: labelOf(p) + suffix };
     };
 

@@ -12,6 +12,8 @@ window.HOSTS.vi = {
   native: 'Tiếng Việt',
   font: "'Noto Sans', system-ui, sans-serif",
 
+  hints: { eggOn: 'được', eggOff: 'không' },
+
   categories: [
     { id: 'greet' },
     { id: 'food' },
@@ -19,6 +21,7 @@ window.HOSTS.vi = {
     { id: 'shop' },
     { id: 'travel' },
     { id: 'stay' },
+    { id: 'night' },
   ],
 
   phrases: [
@@ -51,7 +54,9 @@ window.HOSTS.vi = {
     { id: 'littlespicy', cat: 'spice', script: 'Cay vừa thôi', latin: '' },
     { id: 'spicy', cat: 'spice', script: 'Cay', latin: '' },
     { id: 'veryspicy', cat: 'spice', script: 'Rất cay', latin: '' },
-    { id: 'vegetarian', cat: 'spice', script: 'Tôi ăn chay', latin: '' },
+    { id: 'vegetarian', cat: 'spice', script: 'Tôi ăn chay', latin: '',
+      egg: { scriptOn: 'Tôi ăn chay, ăn trứng được', scriptOff: 'Tôi ăn chay, không ăn trứng',
+             latinOn: '', latinOff: '' } },
     { id: 'vegan', cat: 'spice', script: 'Tôi ăn thuần chay', latin: '' },
     { id: 'nomeat', cat: 'spice', script: 'Không thịt', latin: '' },
     { id: 'nopork', cat: 'spice', script: 'Không thịt heo', latin: '' },
@@ -87,5 +92,16 @@ window.HOSTS.vi = {
     { id: 'checkin', cat: 'stay', script: 'Mấy giờ nhận phòng?', latin: '', q: true },
     { id: 'checkout', cat: 'stay', script: 'Tôi muốn trả phòng', latin: '' },
     { id: 'keepbag', cat: 'stay', script: 'Tôi gửi hành lý ở đây được không?', latin: '', q: true },
+
+    { id: 'cheers', cat: 'night', script: 'Cạn ly!', latin: '' },
+    { id: 'onemore', cat: 'night', script: 'Thêm một cốc nữa', latin: '' },
+    { id: 'glasswater', cat: 'night', script: 'Một cốc nước lọc', latin: '' },
+    { id: 'recommend', cat: 'night', script: 'Ở đây có gì ngon?', latin: '', q: true },
+    { id: 'noalcohol', cat: 'night', script: 'Tôi không uống rượu', latin: '' },
+    { id: 'toilet', cat: 'night', script: 'Nhà vệ sinh ở đâu?', latin: '', q: true },
+    { id: 'separatebill', cat: 'night', script: 'Tính riêng', latin: '' },
+    { id: 'paycard', cat: 'night', script: 'Có thể trả bằng thẻ không?', latin: '', q: true },
+    { id: 'closing', cat: 'night', script: 'Mấy giờ đóng cửa?', latin: '', q: true },
+    { id: 'goinghome', cat: 'night', script: 'Tôi về nhà', latin: '' },
   ],
 };

@@ -13,6 +13,8 @@ window.HOSTS.ja = {
   native: '日本語',
   font: "'Noto Sans JP', 'Hiragino Sans', 'Yu Gothic', 'Meiryo', system-ui, sans-serif",
 
+  hints: { eggOn: '卵OK', eggOff: '卵抜き' },
+
   categories: [
     { id: 'greet' },
     { id: 'food' },
@@ -20,6 +22,7 @@ window.HOSTS.ja = {
     { id: 'shop' },
     { id: 'travel' },
     { id: 'stay' },
+    { id: 'night' },
   ],
 
   phrases: [
@@ -52,7 +55,9 @@ window.HOSTS.ja = {
     { id: 'littlespicy', cat: 'spice', script: '少し辛めでお願いします', latin: 'Sukoshi karame de onegai shimasu' },
     { id: 'spicy', cat: 'spice', script: '辛いです', latin: 'Karai desu' },
     { id: 'veryspicy', cat: 'spice', script: 'とても辛いです', latin: 'Totemo karai desu' },
-    { id: 'vegetarian', cat: 'spice', script: 'ベジタリアンです', latin: 'Bejitarian desu' },
+    { id: 'vegetarian', cat: 'spice', script: 'ベジタリアンです', latin: 'Bejitarian desu',
+      egg: { scriptOn: 'ベジタリアンです。卵は大丈夫です', scriptOff: 'ベジタリアンです。卵は抜きでお願いします',
+             latinOn: 'Bejitarian desu. Tamago wa daijōbu desu', latinOff: 'Bejitarian desu. Tamago wa nuki de onegai shimasu' } },
     { id: 'vegan', cat: 'spice', script: 'ヴィーガンです', latin: 'Vīgan desu' },
     { id: 'nomeat', cat: 'spice', script: '肉なしでお願いします', latin: 'Niku nashi de onegai shimasu' },
     { id: 'nopork', cat: 'spice', script: '豚肉なしでお願いします', latin: 'Butaniku nashi de onegai shimasu' },
@@ -88,5 +93,16 @@ window.HOSTS.ja = {
     { id: 'checkin', cat: 'stay', script: 'チェックインは何時ですか', latin: 'Chekku in wa nanji desu ka', q: true },
     { id: 'checkout', cat: 'stay', script: 'チェックアウトしたいです', latin: 'Chekku auto shitai desu' },
     { id: 'keepbag', cat: 'stay', script: '荷物を預かってもらえますか', latin: 'Nimotsu o azukatte moraemasu ka', q: true },
+
+    { id: 'cheers', cat: 'night', script: '乾杯', latin: 'Kanpai' },
+    { id: 'onemore', cat: 'night', script: 'もう一杯ください', latin: 'Mō ippai kudasai' },
+    { id: 'glasswater', cat: 'night', script: 'お水を一杯ください', latin: 'O-mizu o ippai kudasai' },
+    { id: 'recommend', cat: 'night', script: 'おすすめは何ですか', latin: 'Osusume wa nan desu ka', q: true },
+    { id: 'noalcohol', cat: 'night', script: 'アルコールは飲みません', latin: 'Arukōru wa nomimasen' },
+    { id: 'toilet', cat: 'night', script: 'トイレはどこですか', latin: 'Toire wa doko desu ka', q: true },
+    { id: 'separatebill', cat: 'night', script: '別々でお願いします', latin: 'Betsubetsu de onegai shimasu' },
+    { id: 'paycard', cat: 'night', script: 'カードは使えますか', latin: 'Kādo wa tsukaemasu ka', q: true },
+    { id: 'closing', cat: 'night', script: '何時に閉まりますか', latin: 'Nanji ni shimarimasu ka', q: true },
+    { id: 'goinghome', cat: 'night', script: '帰ります', latin: 'Kaerimasu' },
   ],
 };
