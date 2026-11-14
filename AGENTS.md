@@ -67,7 +67,9 @@ Regler:
 - `compose()` är den enda vägen från fras → visad text. Lägg aldrig in partikeln
   direkt i strängarna, då slutar krub/kha-växlaren fungera.
 - Nya fraser kräver **samma `id`** i host- och gästfilerna. Saknad gäst-nyckel
-  faller tillbaka på svenska, sedan på id:t.
+  faller tillbaka på svenska, sedan på frasens eget `label`, sedan på id:t.
+- **Kategorier är per värd.** Lägg bara in de flikar som är relevanta för landet —
+  thai har `Uteliv` med bar fine, japanska har `Uteliv` med 乾杯 men inga bar-fine-fraser.
 - Nytt språk = en ny fil + `<script>`-rad i `index.html` + post i `SHELL` i `sw.js`
   (och bumpad `CACHE`).
 
@@ -107,8 +109,10 @@ Två valfria fält styr varianter:
 
 - **`{p}`** — artighetsändelsen. Byts mot `krub`/`ครับ` eller `kha`/`ค่ะ`.
   `q: true` ger `คะ` istället för `ค่ะ` (thai skiljer påstående och fråga).
-- **`egg: {...}`** — frasen har en ägg-variant. Används av "Vegetariskt" eftersom
-  `มังสวิรัติ` (ägg okej) och `เจ` (strikt veganskt) inte är samma sak.
+- **`egg: { scriptOn, scriptOff, latinOn, latinOff }`** — frasen har två **kompletta**
+  varianter (med och utan ägg), inte suffix. Varje språk formulerar dem som det själv
+  talar: thai bygger vidare på `มังสวิรัติ`, japanska skriver en hel mening. Saknas
+  `egg` göms växlaren automatiskt.
 
 `compose()` är den enda vägen från fras → visad text. Lägg aldrig in partikeln
 direkt i strängarna, då slutar krub/kha-växlaren fungera.

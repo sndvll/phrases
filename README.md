@@ -51,12 +51,17 @@ Fälten är valfria där språket inte har företeelsen:
 | Fält | Betydelse | Exempel |
 |---|---|---|
 | `parts` | Könsbunden artighetsändelse. **Saknas** → Man/Kvinna-knappen göms | thai har, japanska/kinesiska har inte |
-| `egg` per fras | Varianter (vegetariskt med/utan ägg). Saknas → ägg-växlaren göms | bara thai i dag |
+| `egg` per fras | Två **kompletta** fraser (med/utan ägg). Saknas → ägg-växlaren göms | alla fyra värdarna |
 | `latin` | Uttal. **Tom sträng** → uttalsraden göms | vietnamesiska (skriften är redan latin) |
 | `font` | Typsnittsstack för skriften | thai: Noto Sans Thai, ja/zh: system-CJK |
 
-Kategorierna är per värd: japanska, vietnamesiska och kinesiska använder sex flikar
-(ingen *Uteliv* — bar fine är en thailändsk företeelse).
+**Kategorier och fraser är per värd.** Varje host-fil bestämmer själv vilka flikar som
+finns och vilka fraser som ingår — thai har 79 fraser och sju flikar, de andra 70 och
+sju. Thailands `barfine`, `buydrink` och `justlooking` finns bara där; japanska,
+vietnamesiska och kinesiska har egen uteliv (乾杯 / Cạn ly! / 干杯) men inga bar-fine-fraser.
+
+En fras `id` är kontraktet mot gästspråken: finns id:t i `guest.*.js` får den en
+betydelse. En helt värd-specifik fras kan i stället sätta `label` direkt i host-filen.
 
 ## Tema
 
