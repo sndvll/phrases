@@ -9,8 +9,8 @@ En frasapp för resande, byggd för att **visas upp**: användaren läser uttale
 personen framför läser skriften på sitt eget språk. Därför är värdlandets skrift
 alltid synlig i listan och kan förstoras till helskärm.
 
-Just nu är thailändska enda värdlandet, men inget i koden är bundet till det — allt
-språkspecifikt bor i `i18n/host.<code>.js`.
+Värdländer: thailändska, japanska, vietnamesiska, kinesiska (förenklad). Inget i
+koden är bundet till ett visst språk — allt språkspecifikt bor i `i18n/host.<code>.js`.
 
 Ingen app-server, ingen databas, ingen container — statiska filer som GitHub Pages
 serverar, plus en service worker som gör den offline-kapabel. Tidigare kördes den som
@@ -21,7 +21,7 @@ en nginx-container i homelabben; den vägen är riven.
 | Lager | Val |
 |---|---|
 | Frontend | Ren HTML + CSS + vanilla JS (Svelte används inte — en fil räcker) |
-| Typsnitt | Outfit (latin) + Noto Sans Thai, **självhostade** i `fonts/` |
+| Typsnitt | Outfit + Noto Sans Thai + Noto Sans (vi), **självhostade** i `fonts/`; CJK via systemtypsnitt |
 | Offline | `sw.js` precachar app-skalet; `manifest.webmanifest` gör den installerbar |
 | Hosting | GitHub Pages, repo `sndvll/phrases`, branch `main`, root |
 | Domän | <https://sndvll.github.io/phrases/> (ingen egen domän, ingen Caddy) |
@@ -32,7 +32,8 @@ en nginx-container i homelabben; den vägen är riven.
 index.html               markup — inga inline-stilar, ingen inline-JS
 styles.css               all CSS (teman som variabler)
 app.js                   all logik; laddas med defer efter i18n-filerna
-i18n/host.th.js          värdlandets fraser (thai-skrift + latin)
+i18n/host.th.js          thailändska     i18n/host.ja.js  japanska
+i18n/host.vi.js          vietnamesiska   i18n/host.zh.js  kinesiska (förenklad)
 i18n/guest.sv.js         gästspråk svenska (UI + betydelser)
 i18n/guest.en.js         gästspråk engelska
 sw.js                    service worker: precache + stale-while-revalidate
@@ -57,6 +58,12 @@ Regler:
 
 - **Allt som är värd-specifikt ska bo i host-filen.** `index.html` får inte
   anta att `parts.m` heter `ครับ`; den läser `hostData().parts`.
+- **`parts`, `egg`, `latin` och kategorier är valfria per värd.** Saknar språket en
+  könsbunden artighetsändelse göms Man/Kvinna-knappen; saknas ägg-varianter göms
+  ägg-växlaren; är `latin` tom göms uttalsraden. Bygg aldrig in antaganden om att
+  ett fält finns.
+- **CJK-typsnitt hämtas aldrig** — de ligger i systemet (Hiragino/PingFang/Noto).
+  Vietnamesiska har egna woff2 i `fonts/` eftersom Outfit saknar dess diakriter.
 - `compose()` är den enda vägen från fras → visad text. Lägg aldrig in partikeln
   direkt i strängarna, då slutar krub/kha-växlaren fungera.
 - Nya fraser kräver **samma `id`** i host- och gästfilerna. Saknad gäst-nyckel

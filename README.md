@@ -7,8 +7,9 @@ synlig i listan och kan förstoras till helskärm.
 Appen är statisk — ingen build, inga tredjepartsberoenden — och publiceras på
 **GitHub Pages**: <https://sndvll.github.io/phrases/>. Den fungerar helt offline.
 
-**Resmål i dag:** thailändska. Fler värdländer läggs till som egna filer (se
-[Två språkaxlar](#två-språkaxlar)) — inget i koden är bundet till thai.
+**Resmål i dag:** thailändska, japanska, vietnamesiska och kinesiska (förenklad).
+Fler värdländer läggs till som egna filer (se [Två språkaxlar](#två-språkaxlar)) —
+inget i koden är bundet till ett visst språk.
 
 ## Funktioner
 
@@ -32,16 +33,30 @@ Inställningarna sparas i `localStorage`.
 | **Värd** | Språket i landet du är i — skrift + uttal | `i18n/host.<code>.js` |
 | **Gäst** | Ditt eget språk: UI, flikar, knappar och frasbetydelser | `i18n/guest.<code>.js` |
 
-Just nu finns `host.th.js` (thailändska) samt `guest.sv.js` och `guest.en.js`.
+Värdar: `host.th.js`, `host.ja.js`, `host.vi.js`, `host.zh.js`.
+Gäster: `guest.sv.js`, `guest.en.js`.
+
+Båda väljs i språkmenyn (jordgloben) och sparas i `localStorage`.
 
 Att lägga till ett **gästspråk** (t.ex. tyska): kopiera `guest.en.js`, byt `code`,
 `name`, `ui` och `phrases`, lägg till en `<script>`-rad i `index.html`. Saknade
 fraser faller tillbaka på svenska.
 
-Att lägga till ett **resmål** (t.ex. Japan): kopiera `host.th.js`, byt `name`,
-`native`, `parts`, `hints`, kategorier och `phrases` (samma `id` som gästfilerna),
-registrera filen och välj den i `state.host`. Allt språkspecifikt — skrift, uttal,
-artighetspartiklar, varianter — bor i host-filen, aldrig i `index.html`.
+Att lägga till ett **resmål**: kopiera närmaste host-fil, byt `code`, `name`,
+`native`, `font`, `categories` och `phrases` (samma `id` som gästfilerna), lägg till
+en `<script>`-rad i `index.html` och posten i `sw.js` → `SHELL`.
+
+Fälten är valfria där språket inte har företeelsen:
+
+| Fält | Betydelse | Exempel |
+|---|---|---|
+| `parts` | Könsbunden artighetsändelse. **Saknas** → Man/Kvinna-knappen göms | thai har, japanska/kinesiska har inte |
+| `egg` per fras | Varianter (vegetariskt med/utan ägg). Saknas → ägg-växlaren göms | bara thai i dag |
+| `latin` | Uttal. **Tom sträng** → uttalsraden göms | vietnamesiska (skriften är redan latin) |
+| `font` | Typsnittsstack för skriften | thai: Noto Sans Thai, ja/zh: system-CJK |
+
+Kategorierna är per värd: japanska, vietnamesiska och kinesiska använder sex flikar
+(ingen *Uteliv* — bar fine är en thailändsk företeelse).
 
 ## Tema
 
@@ -61,6 +76,11 @@ ikoner och typsnitten) av `sw.js`, varefter den startar utan nät alls.
 Typsnitten är **självhostade** i `fonts/` just därför. Lägg aldrig tillbaka en
 `fonts.googleapis.com`-länk; det är den enda detalj som bryter offline-läget.
 
+CJK använder **systemtypsnitt** (Hiragino/PingFang på iOS, Noto på Android) — att
+bädda in japanska eller kinesiska hade kostat flera megabyte, och systemens egna
+CJK-typsnitt är bättre än något vi kan paketera. Vietnamesiska har egna vikter i
+`fonts/noto-sans-*.woff2` eftersom Outfit saknar tecken som ế och ộ.
+
 På iPhone: dela-menyn → **Lägg till på hemskärmen**. Då startar den i standalone-läge
 utan webbläsar-chrome, vilket är snabbare och ser ut som en app.
 
@@ -75,12 +95,15 @@ phrases/
 ├── styles.css       all CSS, teman som variabler
 ├── app.js           all logik (state, rendering, gesthantering)
 ├── i18n/
-│   ├── host.th.js   värdlandets fraser (skrift + uttal)
+│   ├── host.th.js   thailändska
+│   ├── host.ja.js   japanska
+│   ├── host.vi.js   vietnamesiska
+│   ├── host.zh.js   kinesiska (förenklad)
 │   ├── guest.sv.js  gästspråk: svenska
 │   └── guest.en.js  gästspråk: engelska
 ├── sw.js            service worker, precache av app-skalet
 ├── manifest.webmanifest
-├── fonts/           vikter för latin + thai (woff2, självhostade)
+├── fonts/           Outfit + Noto Sans Thai + Noto Sans (vietnamesiska)
 ├── icons/           180 px (apple-touch) + 512 px (manifest)
 └── .nojekyll        hindrar GitHub från att Jekyll-processa sajten
 ```
