@@ -40,6 +40,9 @@
       --acc-food: #38bdf8;
       --acc-spice: #34d399;
       --acc-night: #a78bfa;
+      --acc-shop: #f472b6;
+      --acc-travel: #2dd4bf;
+      --acc-stay: #818cf8;
       --accent: var(--acc-greet);
 
       --latin: 'Outfit', system-ui, sans-serif;
@@ -70,6 +73,9 @@
         --acc-food: #0369a1;
         --acc-spice: #047857;
         --acc-night: #6d28d9;
+        --acc-shop: #be185d;
+        --acc-travel: #0f766e;
+        --acc-stay: #4338ca;
       }
     }
 
