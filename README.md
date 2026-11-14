@@ -21,6 +21,7 @@ Appen är statisk — ingen build, inga tredjepartsberoenden — och publiceras 
 | Man / Kvinna | Byter artighetsändelse i alla fraser när språket har en (thai: ครับ/krub eller ค่ะ/kha, คะ i frågor) |
 | Ägg-läge | Växlar fraser som har en variant, t.ex. vegetariskt med och utan ägg |
 | Språk | Välj gästspråk (svenska/engelska) i språkmenyn (jordgloben) |
+| Så funkar det | Info-knappen i headern förklarar tryck, långtryck, Man/Kvinna, språk och offline |
 
 Inställningarna sparas i `localStorage`.
 
