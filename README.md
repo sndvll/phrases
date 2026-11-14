@@ -24,7 +24,16 @@ inget i koden är bundet till ett visst språk.
 | Språk | Välj gästspråk (svenska/engelska) i språkmenyn (jordgloben) |
 | Så funkar det | Info-knappen i headern förklarar tryck, långtryck, Man/Kvinna, språk och offline |
 
-Inställningarna sparas i `localStorage`.
+Allt du väljer sparas i `localStorage` och återställs vid omladdning — även vilken
+kategori du stod på:
+
+| Nyckel | Innehåll |
+|---|---|
+| `phrases.host` | resmål (`th`, `ja`, `vi`, `zh`) |
+| `phrases.guest` | ditt språk (`sv`, `en`) |
+| `phrases.pol` | artighetsform (`m` / `f`) |
+| `phrases.egg` | ägg-läget (`1` / `0`) |
+| `phrases.cat` | aktiv kategori, t.ex. `stay` — faller tillbaka på första fliken om resmålet saknar den |
 
 ## Två språkaxlar
 

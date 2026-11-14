@@ -132,6 +132,17 @@ Två valfria fält styr varianter:
 `compose()` är den enda vägen från fras → visad text. Lägg aldrig in partikeln
 direkt i strängarna, då slutar krub/kha-växlaren fungera.
 
+## Persistens
+
+`js/state.js` äger alla nycklar (`phrases.host|guest|pol|egg|cat`). `state.cat` är
+ett **kategori-id**, inte ett index, eftersom resmålen har olika kategorimängder.
+`build()` återställer kategorin utan animation (`scrollLeft`, inte `scrollTo`), och
+`initGestures`-flödet sparar varje sidbyte. Ett okänt id faller tillbaka på första
+fliken och skrivs över, så lagringen läker sig själv.
+
+Nycklarna hette `thai.*` när appen bara var thailändsk; `persistAll()` läser dem en
+gång och tar bort dem.
+
 ## Flermarkering
 
 Listikonen i headern togglar `selectionMode`, och **långtryck (450 ms)** på ett kort
