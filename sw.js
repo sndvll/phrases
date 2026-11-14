@@ -1,6 +1,6 @@
 /* App-shell cache. Everything the app needs is local, so a stale-while-revalidate
    strategy is safe: serve from cache instantly, refresh in the background. */
-const CACHE = 'thai-v12';
+const CACHE = 'thai-v13';
 const SHELL = [
   './',
   './index.html',
@@ -18,7 +18,11 @@ const SHELL = [
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE).then((cache) => cache.addAll(SHELL)).then(() => self.skipWaiting())
+    caches.open(CACHE)
+      // GitHub Pages sends max-age=600, so a plain addAll can pin the browser's
+      // stale copy into a brand-new cache. `cache: 'reload'` bypasses that.
+      .then((cache) => cache.addAll(SHELL.map((url) => new Request(url, { cache: 'reload' }))))
+      .then(() => self.skipWaiting())
   );
 });
 
