@@ -4,8 +4,8 @@ En liten fraslista för svenskar i Thailand, byggd för att **visas upp**. Svens
 läser uttalet, thailändaren läser thai-skriften. Därför är thai-skriften alltid
 synlig i listan och kan förstoras till helskärm.
 
-Sajten är **en enda HTML-fil** med all data, CSS och JS — ingen build, inga
-tredjepartsberoenden, och den fungerar helt offline (se nedan).
+Sajten är statisk — ingen build, inga tredjepartsberoenden — och publiceras på
+**GitHub Pages**: <https://sndvll.github.io/phrases/>. Den fungerar helt offline (se nedan).
 
 ## Funktioner
 
@@ -36,8 +36,8 @@ statusradens text färg följa en CSS-mediafråga.
 
 | Axel | Betydelse | Fil |
 |---|---|---|
-| **Värd** | Språket i landet du är i — thai-skrift + uttal | `site/i18n/host.th.js` |
-| **Gäst** | Ditt eget språk: UI, flikar, knappar och frasbetydelser | `site/i18n/guest.<code>.js` |
+| **Värd** | Språket i landet du är i — thai-skrift + uttal | `i18n/host.th.js` |
+| **Gäst** | Ditt eget språk: UI, flikar, knappar och frasbetydelser | `i18n/guest.<code>.js` |
 
 Att lägga till ett **gästspråk** (t.ex. tyska): kopiera `guest.en.js`, byt `code`,
 `name`, `ui` och `phrases`, lägg till en `<script>`-rad i `index.html`. Saknade
@@ -50,11 +50,10 @@ host-filen.
 
 ## Offline
 
-Appen är en PWA. Vid första besöket precachas skalet (HTML, manifest, ikoner och
-båda typsnitten) av `sw.js`, varefter den startar utan nät alls — testat genom att
-stoppa containern och ladda om, vilket gav full funktionalitet med lokal font.
+Appen är en PWA. Vid första besöket precachas skalet (HTML, CSS, JS, i18n, manifest,
+ikoner och båda typsnitten) av `sw.js`, varefter den startar utan nät alls.
 
-Typsnitten är **självhostade** i `site/fonts/` just därför. Lägg aldrig tillbaka en
+Typsnitten är **självhostade** i `fonts/` just därför. Lägg aldrig tillbaka en
 `fonts.googleapis.com`-länk; det är den enda detalj som bryter offline-läget.
 
 På iPhone: dela-menyn → **Lägg till på hemskärmen**. Då startar den i standalone-läge
@@ -62,27 +61,28 @@ utan webbläsar-chrome, vilket är snabbare och ser ut som en app.
 
 ## Struktur
 
+Repo-roten **är** sajten — GitHub Pages serverar `main` direkt, ingen build och inga
+arbetsflöden.
+
 ```
-thai-phrases/
-├── docker-compose.yml   nginx:alpine, nätet homelab
-├── nginx.conf           MIME-typer för .webmanifest/.woff2, no-cache på sw.js
-└── site/
-    ├── index.html       markup (91 rader), inga inline-stilar eller inline-JS
-    ├── styles.css       all CSS, teman som variabler
-    ├── app.js           all logik (state, rendering, gesthantering)
-    ├── i18n/
-    │   ├── host.th.js   värdlandets fraser (thai-skrift + uttal)
-    │   ├── guest.sv.js  gästspråk: svenska
-    │   └── guest.en.js  gästspråk: engelska
-    ├── sw.js            service worker, precache av app-skalet
-    ├── manifest.webmanifest
-    ├── fonts/           Outfit + Noto Sans Thai (woff2, självhostade)
-    └── icons/           180 px (apple-touch) + 512 px (manifest)
+phrases/
+├── index.html       markup, inga inline-stilar eller inline-JS
+├── styles.css       all CSS, teman som variabler
+├── app.js           all logik (state, rendering, gesthantering)
+├── i18n/
+│   ├── host.th.js   värdlandets fraser (thai-skrift + uttal)
+│   ├── guest.sv.js  gästspråk: svenska
+│   └── guest.en.js  gästspråk: engelska
+├── sw.js            service worker, precache av app-skalet
+├── manifest.webmanifest
+├── fonts/           Outfit + Noto Sans Thai (woff2, självhostade)
+├── icons/           180 px (apple-touch) + 512 px (manifest)
+└── .nojekyll        hindrar GitHub från att Jekyll-processa sajten
 ```
 
 ## Redigera fraser
 
-Fraserna bor i `site/i18n/host.th.js`:
+Fraserna bor i `i18n/host.th.js`:
 
 ```js
 { id: 'thanks', cat: 'greet', script: 'ขอบคุณมาก{p}', latin: 'Khop khun mak {p}' }
@@ -111,10 +111,15 @@ avviker från turistfraser:
 ## Deploy
 
 ```bash
-cd ~/projects/thai-phrases
-docker compose up -d
+git push origin main      # GitHub Pages bygger automatiskt från main
 ```
 
-Caddy proxar `thai-phrases.sndvll.dev` → `thai-phrases:80` (se `~/homelab/proxy/Caddyfile`).
-Ingen build behövs — `site/` är bind-mountad read-only, så en filändring slår igenom direkt.
-`nginx.conf` mountas också in (MIME-typer + cache-headers).
+Ingen build och inget CI-steg: repo-roten publiceras som den är. Efter en push tar
+det 30–60 s innan sidan är uppdaterad.
+
+**Viktigt vid ändringar:** GitHub Pages skickar `Cache-Control: max-age=600` på
+tillgångar, och service workern serverar cache först. Bumpa `CACHE` i `sw.js` när du
+ändrar en fil i `SHELL` — annars ligger den gamla versionen kvar hos besökare.
+
+**Sökvägar måste vara relativa** (`styles.css`, `fonts/…`, `./` i `SHELL`), eftersom
+sajten ligger under `/phrases/` och inte på domänroten.

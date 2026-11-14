@@ -1,6 +1,7 @@
 # AGENTS.md — Thai Fraslista
 
 > **Rotkontext:** [`../../AGENTS.md`](../../AGENTS.md) — infrastruktur, konventioner.
+> **Live:** <https://sndvll.github.io/phrases/> (GitHub Pages, `main` → root).
 
 ## Vad det är
 
@@ -8,34 +9,34 @@ En fraslista för svenskar i Thailand, byggd för att **visas upp**: svensken l�
 uttalet, thailändaren läser thai-skriften. Därför är thai-skriften alltid synlig i
 listan och kan förstoras till helskärm.
 
-Ingen app-server, ingen databas — en statisk HTML-fil som serveras av nginx, plus en
-service worker som gör den offline-kapabel.
+Ingen app-server, ingen databas, ingen container — statiska filer som GitHub Pages
+serverar, plus en service worker som gör den offline-kapabel. Tidigare kördes den som
+en nginx-container i homelabben; den vägen är riven.
 
 ## Stack
 
 | Lager | Val |
 |---|---|
 | Frontend | Ren HTML + CSS + vanilla JS (Svelte används inte — en fil räcker) |
-| Typsnitt | Outfit (latin) + Noto Sans Thai, **självhostade** i `site/fonts/` |
+| Typsnitt | Outfit (latin) + Noto Sans Thai, **självhostade** i `fonts/` |
 | Offline | `sw.js` precachar app-skalet; `manifest.webmanifest` gör den installerbar |
-| Server | `nginx:alpine`, nätet `homelab`, konfig i `nginx.conf` |
-| Proxy | Caddy: `thai-phrases.sndvll.dev` → `thai-phrases:80` |
+| Hosting | GitHub Pages, repo `sndvll/phrases`, branch `main`, root |
+| Domän | <https://sndvll.github.io/phrases/> (ingen egen domän, ingen Caddy) |
 
 ## Struktur
 
 ```
-site/index.html          markup — inga inline-stilar, ingen inline-JS
-site/styles.css          all CSS (teman som variabler)
-site/app.js              all logik; laddas med defer efter i18n-filerna
-site/i18n/host.th.js     värdlandets fraser (thai-skrift + latin)
-site/i18n/guest.sv.js    gästspråk svenska (UI + betydelser)
-site/i18n/guest.en.js    gästspråk engelska
-site/sw.js               service worker: precache + stale-while-revalidate
-site/manifest.webmanifest
-site/fonts/              woff2 (Outfit latin + Noto Sans Thai thai-subset)
-site/icons/              icon-180.png (apple-touch), icon-512.png
-nginx.conf               MIME-typer + no-cache på sw.js
-docker-compose.yml       nginx, bind-mount av site/ read-only
+index.html               markup — inga inline-stilar, ingen inline-JS
+styles.css               all CSS (teman som variabler)
+app.js                   all logik; laddas med defer efter i18n-filerna
+i18n/host.th.js          värdlandets fraser (thai-skrift + latin)
+i18n/guest.sv.js         gästspråk svenska (UI + betydelser)
+i18n/guest.en.js         gästspråk engelska
+sw.js                    service worker: precache + stale-while-revalidate
+manifest.webmanifest
+fonts/                   woff2 (Outfit latin + Noto Sans Thai thai-subset)
+icons/                   icon-180.png (apple-touch), icon-512.png
+.nojekyll                hindrar Jekyll från att processa sajten
 ```
 
 `app.js` är en klassisk script-fil (inte en modul) eftersom markupen anropar
@@ -44,9 +45,9 @@ först (klassiska, körs vid parse), sedan `app.js` med `defer`.
 
 ## Två språkaxlar
 
-- **host** = språket i landet du är i. `site/i18n/host.<code>.js` äger skrift,
+- **host** = språket i landet du är i. `i18n/host.<code>.js` äger skrift,
   uttal, artighetspartiklar, kategorier och ägg-varianter.
-- **guest** = användarens språk. `site/i18n/guest.<code>.js` äger `ui` (flikar,
+- **guest** = användarens språk. `i18n/guest.<code>.js` äger `ui` (flikar,
   knappar, fältetiketter) och `phrases` (betydelser per `id`).
 
 Regler:
@@ -63,14 +64,18 @@ Regler:
 ## Offline-regler
 
 - **Typsnitt får aldrig hämtas externt.** Ingen `<link>` till Google Fonts — det
-  bryter offline-läget. Nya vikter läggs i `site/fonts/` + `@font-face`.
+  bryter offline-läget. Nya vikter läggs i `fonts/` + `@font-face`.
 - **Ändrar du innehåll i en cachad fil** (index.html, i18n, typsnitt) måste `CACHE`
-  bumpas i `sw.js` (t.ex. `thai-v3` → `thai-v4`), annars ser befintliga klienter den
+  bumpas i `sw.js` (t.ex. `thai-v10` → `thai-v11`), annars ser befintliga klienter den
   gamla versionen på nästa laddning. Lägger du till en *ny* fil ska den dessutom med
   i `SHELL`.
-- `sw.js` serveras med `Cache-Control: no-cache` (se `nginx.conf`) — annars pinnar
-  webbläsaren en gammal shell.
-- Verifiering: `docker compose stop` och ladda om sidan. Fungerar den är offline ok.
+- **Alla sökvägar är relativa.** Sajten ligger under `/phrases/`, inte på domänroten:
+  `styles.css` (inte `/styles.css`), `url('fonts/…')` i CSS, och `./` i `SHELL` +
+  `start_url`/`scope`/`icons` i manifestet. En absolut sökväg ger 404 på Pages.
+- GitHub Pages skickar `Cache-Control: max-age=600` och kan inte konfigureras —
+  räkna med upp till 10 min fördröjning för icke-installerade besökare efter deploy.
+- Verifiering: ladda sidan, sätt DevTools i offline-läge (eller `docker`-oberoende:
+  koppla ner nätet) och ladda om. 52 fraser + båda typsnitten ska renderas.
 
 ## Tema och färger
 
@@ -131,4 +136,4 @@ det finns ingen mellanliggande detaljmodal, helskärmen *är* detaljvyn. Räknar
 - **Ingen inline-CSS eller inline-JS i markupen.** Undantaget är `onclick` på
   knappar som anropar globala funktioner i `app.js`.
 - **Inga commits på eget bevåg** — commit/push bara på uttrycklig begäran.
-- Ändringar i `site/` slår igenom direkt (bind-mount); ingen omstart behövs.
+- Ändringar slår igenom via `git push`; GitHub Pages bygger om på ~30–60 s.
