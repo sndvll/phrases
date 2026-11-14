@@ -222,7 +222,7 @@
       overflow-y: auto;
       overscroll-behavior-y: contain;
       scroll-snap-align: start;
-      padding: 2px 16px 24px;
+      padding: 2px 16px 12px;
       display: flex;
       flex-direction: column;
       gap: 7px;
@@ -405,7 +405,9 @@
       display: flex;
       justify-content: center;
       gap: 6px;
-      padding: 12px 0 calc(10px + var(--safe-bottom));
+      /* The dots are decorative, so they do not need the full home-indicator
+         inset; subtract 12px from it and keep a 16px floor on devices without. */
+      padding: 10px 0 max(16px, calc(var(--safe-bottom) - 12px));
       flex: none;
     }
     .dots button {
