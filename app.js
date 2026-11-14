@@ -170,6 +170,14 @@
         const i = Math.round(carousel.scrollLeft / carousel.clientWidth);
         [...tabs.children].forEach((t, j) => t.setAttribute('aria-selected', String(j === i)));
         [...dots.children].forEach((d, j) => d.setAttribute('aria-current', String(j === i)));
+
+        // Keep the active tab visible; the tab row scrolls with seven categories.
+        const active = tabs.children[i];
+        if (active && tabs.scrollWidth > tabs.clientWidth) {
+          const left = active.offsetLeft - (tabs.clientWidth - active.offsetWidth) / 2;
+          tabs.scrollTo({ left: Math.max(0, left), behavior: 'smooth' });
+        }
+
         const cats = hostData().categories;
         document.documentElement.style.setProperty(
           '--accent',
