@@ -6,6 +6,7 @@ window.LOCALES.en = {
   name: 'English',
 
   ui: {
+    appName: 'Phrases',
     subtitle: 'phrase list',
     tabs: {
       greet: 'Greetings',

@@ -11,6 +11,7 @@ window.LOCALES.sv = {
   name: 'Svenska',
 
   ui: {
+    appName: 'Fraslista',
     subtitle: 'fraslista',
     tabs: {
       greet: 'Hälsningar',

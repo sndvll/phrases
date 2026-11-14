@@ -7,8 +7,8 @@
                  Data lives in i18n/guest.<code>.js.
 
        Adding a guest language = one new guest file + a script tag.
-       Adding a destination = one new host file; the app has no Thai-specific
-       assumptions outside host.th.js.
+       Adding a destination = one new host file; the app makes no assumptions
+       about the script outside that file.
        ------------------------------------------------------------------ */
     const HOSTS = window.HOSTS || {};
     const LOCALES = window.LOCALES || {};
@@ -285,7 +285,7 @@
       $('host-value').textContent = hostData().native + ' · ' + hostData().name;
       $('host-name').textContent = hostData().native;
       document.documentElement.lang = state.guest;
-      document.title = hostData().name + ' · ' + ui.subtitle;
+      document.title = ui.appName || 'Fraslista';
       buildGuestOptions();
     }
 

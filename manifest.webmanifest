@@ -1,7 +1,7 @@
 {
-  "name": "Thai · Fraslista",
-  "short_name": "Thai",
-  "description": "Fraslista för svenskar i Thailand — thai-skrift, uttal och engelska.",
+  "name": "Fraslista",
+  "short_name": "Fraslista",
+  "description": "Frasapp för resande — värdlandets skrift och uttal, med din egen översättning.",
   "lang": "sv",
   "start_url": "./",
   "scope": "./",
