@@ -657,7 +657,10 @@
       font-weight: 600;
       line-height: 1.45;
       color: var(--text);
-      word-break: break-word;
+      /* Long phrases shrink to fit (see fitSlides in show.js) instead of
+         breaking awkwardly; balance keeps two lines even. */
+      text-wrap: balance;
+      overflow-wrap: break-word;
     }
     .big-slide .latin {
       font-size: clamp(14px, 4.2vw, 20px);

@@ -42,7 +42,46 @@ export function openBig(phrases) {
   track.scrollLeft = 0;
   updateBigCounter();
   $('big').classList.add('open');
+
+  // Must run while the overlay is laid out; the slides are invisible before.
+  requestAnimationFrame(fitSlides);
 }
+
+/**
+ * Keeps the phrase readable for the person across the table: shrink the type
+ * until the (balanced) lines fit the height budget, instead of letting a long
+ * phrase spill into a cramped extra line.
+ */
+function fitSlides() {
+  const track = $('big-track');
+  if (!track.clientWidth) return;
+
+  [...track.children].forEach((slide) => {
+    const script = slide.querySelector('.script');
+    if (!script) return;
+
+    script.style.fontSize = '';
+    const availH = slide.clientHeight * 0.5;
+    const availW = slide.clientWidth - 56;
+    if (!availH || !availW) return;
+
+    let lo = 20;
+    let hi = Math.min(96, availW * 0.55);
+
+    for (let i = 0; i < 10; i += 1) {
+      const mid = (lo + hi) / 2;
+      script.style.fontSize = mid + 'px';
+      if (script.scrollHeight <= availH) lo = mid;
+      else hi = mid;
+    }
+
+    script.style.fontSize = lo.toFixed(1) + 'px';
+  });
+}
+
+window.addEventListener('resize', () => {
+  if (isBigOpen()) requestAnimationFrame(fitSlides);
+}, { passive: true });
 
 export function closeBig() {
   $('big').classList.remove('open');
