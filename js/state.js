@@ -45,4 +45,9 @@ export const persistAll = () => {
   save('phrases.pol', state.pol);
   save('phrases.egg', state.eggOk ? '1' : '0');
   if (state.cat) save('phrases.cat', state.cat);
+
+  // Legacy keys from when the app was Thai-only; migrated above.
+  ['thai.guest', 'thai.pol', 'thai.egg', 'thai.host'].forEach((key) => {
+    try { localStorage.removeItem(key); } catch { /* ignore */ }
+  });
 };
