@@ -65,6 +65,7 @@
       tabs.innerHTML = '';
       dots.innerHTML = '';
       carousel.innerHTML = '';
+      lastPage = 0; // rebuilding resets the carousel to the first page
 
       hostData().categories.forEach((cat, i) => {
         const tabLabel = (ui.tabs && ui.tabs[cat.id]) || cat.id;
@@ -164,10 +165,21 @@
     }
 
     let raf = 0;
+    let lastPage = -1;
+
+    /**
+     * Runs on every scroll frame, but only touches the DOM when the page index
+     * actually changes. Writing --accent on <html> invalidates styles for every
+     * card, and starting a smooth scroll on the tab row mid-swipe both fight the
+     * gesture — that was the lag.
+     */
     carousel.addEventListener('scroll', () => {
       cancelAnimationFrame(raf);
       raf = requestAnimationFrame(() => {
         const i = Math.round(carousel.scrollLeft / carousel.clientWidth);
+        if (i === lastPage) return;
+        lastPage = i;
+
         [...tabs.children].forEach((t, j) => t.setAttribute('aria-selected', String(j === i)));
         [...dots.children].forEach((d, j) => d.setAttribute('aria-current', String(j === i)));
 
