@@ -143,6 +143,19 @@ fliken och skrivs över, så lagringen läker sig själv.
 Nycklarna hette `thai.*` när appen bara var thailändsk; `persistAll()` läser dem en
 gång och tar bort dem.
 
+## Helskärmens typografi
+
+Frasen i helskärm får **aldrig** brytas hur som helst. `fitSlides()` i `show.js` gör en
+binärsökning på fontstorleken tills texten ryms i **max två balanserade rader**
+(`text-wrap: balance`); blir den tre rader vid 20 px accepteras tre hellre än att
+texten blir oläsbar. Den körs efter att overlayn fått `open` (annars finns ingen
+layout att mäta) och på `resize`.
+
+**Klassnamnen delas mellan lista och helskärm** (`.script`, `.latin`). Reglerna för
+kortens text ligger därför under `.card` — scopar du inte dem läcker `max-width: 62%`
+in i helskärmen och texten radbryts vid 62 % av bredden. Det var exakt den buggen som
+gjorde att långa fraser bröts i två tecken per rad.
+
 ## Flermarkering
 
 Listikonen i headern togglar `selectionMode`, och **långtryck (450 ms)** på ett kort
