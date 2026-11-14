@@ -95,7 +95,8 @@
       display: flex;
       flex-direction: column;
       padding-top: calc(var(--safe-top) + 22px);
-      padding-bottom: var(--safe-bottom);
+      /* No padding-bottom here: .dots owns the safe-area inset, otherwise the
+         home-indicator gap is counted twice. */
     }
 
     header {
