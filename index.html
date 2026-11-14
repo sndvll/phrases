@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#f6f6f8" media="(prefers-color-scheme: light)">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Thai">
+  <title>Thai · Fraslista</title>
+
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icons/icon-180.png">
+  <link rel="icon" href="icons/icon-180.png" sizes="180x180">
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <div class="app">
+    <header>
+      <div class="title"><span id="host-name">ไทย</span> <span data-i18n="subtitle">· fraslista</span></div>
+      <div class="header-right">
+        <button class="icon-btn" id="btn-select" aria-label="Markera fraser" onclick="toggleSelect()">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 6h11M9 12h11M9 18h11"></path>
+            <path d="M4 6l1.5 1.5L8 5"></path>
+            <path d="M4 12l1.5 1.5L8 11"></path>
+            <path d="M4 18l1.5 1.5L8 17"></path>
+          </svg>
+        </button>
+        <button class="icon-btn" id="btn-lang" aria-label="Språk" onclick="openLang()">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+            <circle cx="12" cy="12" r="9"></circle>
+            <path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"></path>
+          </svg>
+        </button>
+        <div class="pol" role="group">
+          <button data-pol="m" aria-pressed="true"><span data-pol-label>Man</span><small>ครับ</small></button>
+          <button data-pol="f" aria-pressed="false"><span data-pol-label>Kvinna</span><small>ค่ะ</small></button>
+        </div>
+      </div>
+    </header>
+
+    <nav id="tabs" role="tablist"></nav>
+
+    <main class="carousel" id="carousel"></main>
+
+    <div class="dots" id="dots"></div>
+  </div>
+
+  <!-- multi-select action bar -->
+  <div class="select-bar" id="select-bar">
+    <span class="count"><b id="select-count">0</b> <span id="select-count-label">valda</span></span>
+    <button class="ghost" id="btn-cancel-select" onclick="exitSelect()">Avbryt</button>
+    <button class="primary" id="btn-show-selected" onclick="showSelected()">Visa</button>
+  </div>
+
+  <!-- language sheet -->
+  <div class="sheet" id="lang-sheet" onclick="if (event.target === this) closeLang()">
+    <div class="sheet-body" role="dialog" aria-modal="true">
+      <div class="grabber"></div>
+      <div class="field">
+        <div class="field-label" id="lbl-guest-lang">Ditt språk</div>
+        <div class="lang-list" id="guest-options"></div>
+      </div>
+      <div class="host-note">
+        <span id="lbl-host-lang">Resmålsspråk</span>
+        <strong id="host-value">ไทย</strong>
+      </div>
+      <div class="actions">
+        <button class="primary" id="btn-lang-close" onclick="closeLang()">Stäng</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- fullscreen, for showing the other person (one or many phrases) -->
+  <div class="big" id="big" onclick="closeBig()">
+    <div class="big-track" id="big-track"></div>
+    <div class="big-counter" id="big-counter" hidden></div>
+    <button class="big-close" onclick="closeBig()" aria-label="Stäng">×</button>
+    <div class="hint" id="big-hint">tryck för att stänga</div>
+  </div>
+
+  <script src="i18n/host.th.js"></script>
+  <script src="i18n/guest.sv.js"></script>
+  <script src="i18n/guest.en.js"></script>
+  <script src="app.js" defer></script>
+</body>
+</html>
