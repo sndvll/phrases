@@ -69,7 +69,7 @@ function buildHostOptions() {
 
 export function setGuest(code) {
   state.guest = code;
-  save('thai.guest', code);
+  save('phrases.guest', code);
   applyUi();
   build();
   refresh();

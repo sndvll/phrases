@@ -1,5 +1,5 @@
 /* Entry point: wires the DOM to the modules and boots the app. */
-import { state, $ } from './state.js';
+import { state, $, persistAll } from './state.js';
 import { build, refresh } from './render.js';
 import { applyUi, openLang, closeLang, openInfo, closeInfo, isLangOpen, isInfoOpen } from './ui.js';
 import { initGestures, toggleSelect, exitSelect, showSelected, closeBig, isBigOpen, isSelecting } from './show.js';
@@ -12,7 +12,7 @@ $('btn-info').addEventListener('click', openInfo);
 document.querySelectorAll('.pol button').forEach((btn) => {
   btn.addEventListener('click', () => {
     state.pol = btn.dataset.pol;
-    localStorage.setItem('thai.pol', state.pol);
+    persistAll();
     document.querySelectorAll('.pol button').forEach((b) =>
       b.setAttribute('aria-pressed', String(b === btn))
     );
@@ -60,6 +60,7 @@ syncStatusBar();
 if (darkQuery.addEventListener) darkQuery.addEventListener('change', syncStatusBar);
 
 /* ---------- boot ---------- */
+persistAll(); // migrate anything stored under the old `thai.*` keys
 applyUi();
 build();
 refresh();

@@ -1,6 +1,6 @@
 /* Carousel, tabs and phrase cards. `build()` creates the structure, `refresh()`
    only rewrites text — both go through applyCardText so they cannot drift. */
-import { state, hostData, loc, $ } from './state.js';
+import { state, hostData, loc, $, save } from './state.js';
 import { compose, labelOf, phrasesOf } from './phrases.js';
 
 export const carousel = $('carousel');
@@ -20,6 +20,24 @@ export function applyCardText(card, phrase) {
   const latin = card.querySelector('.latin');
   latin.textContent = c.latin;
   latin.hidden = !c.latin;
+}
+
+/** Index of the remembered category, or 0 when this host does not have it. */
+function rememberedIndex() {
+  const i = hostData().categories.findIndex((c) => c.id === state.cat);
+  return i >= 0 ? i : 0;
+}
+
+/** Paints tab, dot and accent state for a page index. */
+function syncPage(i) {
+  [...tabs.children].forEach((t, j) => t.setAttribute('aria-selected', String(j === i)));
+  [...dots.children].forEach((d, j) => d.setAttribute('aria-current', String(j === i)));
+
+  const cats = hostData().categories;
+  document.documentElement.style.setProperty(
+    '--accent',
+    cats[i] ? 'var(--acc-' + cats[i].id + ', var(--acc-greet))' : 'var(--acc-greet)'
+  );
 }
 
 export function build() {
@@ -89,6 +107,14 @@ export function build() {
 
     carousel.appendChild(page);
   });
+
+  // Resume where the user was; the carousel must not animate on first paint.
+  const start = rememberedIndex();
+  lastPage = start;
+  carousel.scrollLeft = start * carousel.clientWidth;
+  syncPage(start);
+  state.cat = hostData().categories[start] ? hostData().categories[start].id : null;
+  requestAnimationFrame(revealActiveTab);
 }
 
 export function refresh() {
@@ -107,7 +133,7 @@ export function refresh() {
 
 function setEgg(ok) {
   state.eggOk = ok;
-  localStorage.setItem('thai.egg', ok ? '1' : '0');
+  save('phrases.egg', ok ? '1' : '0');
   refresh();
 }
 
@@ -145,16 +171,15 @@ carousel.addEventListener('scroll', () => {
     if (i === lastPage) return;
     lastPage = i;
 
-    [...tabs.children].forEach((t, j) => t.setAttribute('aria-selected', String(j === i)));
-    [...dots.children].forEach((d, j) => d.setAttribute('aria-current', String(j === i)));
+    syncPage(i);
+
+    const cat = hostData().categories[i];
+    if (cat && state.cat !== cat.id) {
+      state.cat = cat.id;
+      save('phrases.cat', cat.id);
+    }
 
     clearTimeout(navTimer);
     navTimer = setTimeout(revealActiveTab, 130);
-
-    const cats = hostData().categories;
-    document.documentElement.style.setProperty(
-      '--accent',
-      cats[i] ? 'var(--acc-' + cats[i].id + ', var(--acc-greet))' : 'var(--acc-greet)'
-    );
   });
 }, { passive: true });
