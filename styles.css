@@ -434,7 +434,16 @@
       background: var(--scrim);
       backdrop-filter: blur(6px);
       opacity: 0;
+      /* A closed sheet must not keep its blur layer alive while the carousel
+         scrolls — that cost frames on iOS. */
+      visibility: hidden;
       pointer-events: none;
+      transition: opacity 0.2s ease, visibility 0s linear 0.2s;
+    }
+    .sheet.open {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
       transition: opacity 0.2s ease;
     }
     .sheet.open { opacity: 1; pointer-events: auto; }
