@@ -49,8 +49,8 @@ export function openBig(phrases) {
 
 /**
  * Keeps the phrase readable for the person across the table: shrink the type
- * until the (balanced) lines fit the height budget, instead of letting a long
- * phrase spill into a cramped extra line.
+ * until it fits within two balanced lines, instead of letting a long phrase
+ * spill into a cramped extra line.
  */
 function fitSlides() {
   const track = $('big-track');
@@ -61,17 +61,32 @@ function fitSlides() {
     if (!script) return;
 
     script.style.fontSize = '';
-    const availH = slide.clientHeight * 0.5;
     const availW = slide.clientWidth - 56;
-    if (!availH || !availW) return;
+    const maxH = slide.clientHeight * 0.42; // leave room for the latin + guest lines
+    if (!availW || !maxH) return;
+
+    const measure = (size) => {
+      script.style.fontSize = size + 'px';
+      const lineHeight = parseFloat(getComputedStyle(script).lineHeight) || size;
+      return {
+        height: script.scrollHeight,
+        lines: Math.round(script.scrollHeight / lineHeight),
+      };
+    };
+
+    const fits = (size, maxLines) => {
+      const m = measure(size);
+      return m.lines <= maxLines && m.height <= maxH;
+    };
+
+    // Very long phrases may need three lines; accept that rather than shrink to nothing.
+    const maxLines = measure(20).lines > 2 ? 3 : 2;
 
     let lo = 20;
-    let hi = Math.min(96, availW * 0.55);
-
+    let hi = Math.min(96, availW * 0.6);
     for (let i = 0; i < 10; i += 1) {
       const mid = (lo + hi) / 2;
-      script.style.fontSize = mid + 'px';
-      if (script.scrollHeight <= availH) lo = mid;
+      if (fits(mid, maxLines)) lo = mid;
       else hi = mid;
     }
 

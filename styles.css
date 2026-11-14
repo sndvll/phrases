@@ -657,6 +657,9 @@
       font-weight: 600;
       line-height: 1.45;
       color: var(--text);
+      /* Full width: as a centred flex item the block would otherwise shrink to
+         its longest line and wrap far too early. */
+      width: 100%;
       /* Long phrases shrink to fit (see fitSlides in show.js) instead of
          breaking awkwardly; balance keeps two lines even. */
       text-wrap: balance;
