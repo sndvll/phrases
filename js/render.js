@@ -113,7 +113,11 @@ export function build() {
   lastPage = start;
   carousel.scrollLeft = start * carousel.clientWidth;
   syncPage(start);
-  state.cat = hostData().categories[start] ? hostData().categories[start].id : null;
+  const restored = hostData().categories[start] ? hostData().categories[start].id : null;
+  if (restored && state.cat !== restored) {
+    state.cat = restored;
+    save('phrases.cat', restored); // self-heal a stale or foreign category id
+  }
   requestAnimationFrame(revealActiveTab);
 }
 
