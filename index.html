@@ -36,6 +36,13 @@
             <path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"></path>
           </svg>
         </button>
+        <button class="icon-btn" id="btn-info" aria-label="Så funkar det" onclick="openInfo()">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+            <circle cx="12" cy="12" r="9"></circle>
+            <path d="M12 11v5"></path>
+            <path d="M12 7.7v.01"></path>
+          </svg>
+        </button>
         <div class="pol" role="group">
           <button data-pol="m" aria-pressed="true"><span data-pol-label>Man</span><small>ครับ</small></button>
           <button data-pol="f" aria-pressed="false"><span data-pol-label>Kvinna</span><small>ค่ะ</small></button>
@@ -71,6 +78,18 @@
       </div>
       <div class="actions">
         <button class="primary" id="btn-lang-close" onclick="closeLang()">Stäng</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- how it works -->
+  <div class="sheet" id="info-sheet" onclick="if (event.target === this) closeInfo()">
+    <div class="sheet-body" role="dialog" aria-modal="true">
+      <div class="grabber"></div>
+      <div class="info-title" id="info-title">Så funkar det</div>
+      <ul class="info-list" id="info-list"></ul>
+      <div class="actions">
+        <button class="primary" id="btn-info-close" onclick="closeInfo()">Stäng</button>
       </div>
     </div>
   </div>

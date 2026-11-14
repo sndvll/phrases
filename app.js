@@ -223,6 +223,7 @@
     document.addEventListener('keydown', (e) => {
       if (e.key !== 'Escape') return;
       if ($('big').classList.contains('open')) return closeBig();
+      if ($('info-sheet').classList.contains('open')) return closeInfo();
       if ($('lang-sheet').classList.contains('open')) return closeLang();
       if (selectionMode.active) return exitSelect();
     });
@@ -265,6 +266,31 @@
     function openLang() { $('lang-sheet').classList.add('open'); }
     function closeLang() { $('lang-sheet').classList.remove('open'); }
 
+    function openInfo() {
+      $('info-title').textContent = loc().ui.infoTitle;
+      const list = $('info-list');
+      list.innerHTML = '';
+      (loc().ui.info || []).forEach((item, i) => {
+        const li = document.createElement('li');
+        const num = document.createElement('span');
+        num.className = 'num';
+        num.textContent = String(i + 1);
+        const text = document.createElement('span');
+        const bold = document.createElement('b');
+        bold.textContent = item.t + ' ';
+        text.appendChild(bold);
+        text.appendChild(document.createTextNode(item.b));
+        li.appendChild(num);
+        li.appendChild(text);
+        list.appendChild(li);
+      });
+      $('info-sheet').classList.add('open');
+    }
+
+    function closeInfo() {
+      $('info-sheet').classList.remove('open');
+    }
+
     function applyUi() {
       const ui = loc().ui;
       document.querySelectorAll('[data-i18n="subtitle"]').forEach((el) => {
@@ -279,6 +305,8 @@
       $('select-count-label').textContent = ui.selected;
       $('big-hint').textContent = ui.tapToClose;
       $('btn-lang').setAttribute('aria-label', ui.language);
+      $('btn-info').setAttribute('aria-label', ui.infoTitle);
+      $('btn-info-close').textContent = ui.close;
       $('btn-select').setAttribute('aria-label', ui.select);
       $('lbl-guest-lang').textContent = ui.guestLabel;
       $('lbl-host-lang').textContent = ui.hostLabel;
