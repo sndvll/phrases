@@ -1,6 +1,6 @@
 /* App-shell cache. Everything the app needs is local, so a stale-while-revalidate
    strategy is safe: serve from cache instantly, refresh in the background. */
-const CACHE = 'phrases-v23';
+const CACHE = 'phrases-v24';
 const SHELL = [
   './',
   './index.html',
@@ -8,6 +8,7 @@ const SHELL = [
   './app.js',
   './manifest.webmanifest',
   './i18n/host.th.js',
+  './i18n/host.ja.js',
   './i18n/guest.sv.js',
   './i18n/guest.en.js',
   './fonts/outfit-latin.woff2',

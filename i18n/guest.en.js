@@ -77,7 +77,7 @@ window.LOCALES.en = {
     spicy: 'Spicy',
     veryspicy: 'Very spicy',
     vegetarian: 'Vegetarian',
-    vegan: 'Vegan (Chinese style)',
+    vegan: 'Vegan',
     nofishsauce: 'No fish sauce',
     nomeat: 'No meat',
     nopork: 'No pork',

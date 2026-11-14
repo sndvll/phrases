@@ -46,7 +46,7 @@
       --accent: var(--acc-greet);
 
       --latin: 'Outfit', system-ui, sans-serif;
-      --thai: 'Noto Sans Thai', 'Thonburi', 'Leelawadee UI', sans-serif;
+      --script-font: 'Noto Sans Thai', 'Thonburi', 'Leelawadee UI', sans-serif;
       --safe-top: env(safe-area-inset-top, 0px);
       --safe-bottom: env(safe-area-inset-bottom, 0px);
     }
@@ -80,6 +80,7 @@
     }
 
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    [hidden] { display: none !important; }
 
     html, body {
       margin: 0;
@@ -147,7 +148,7 @@
     }
     .pol button small {
       display: block;
-      font-family: var(--thai);
+      font-family: var(--script-font);
       font-size: 10px;
       font-weight: 500;
       opacity: 0.65;
@@ -333,8 +334,8 @@
       line-height: 1.25;
     }
 
-    .th {
-      font-family: var(--thai);
+    .script {
+      font-family: var(--script-font);
       font-size: 14px;
       font-weight: 500;
       line-height: 1.45;
@@ -392,7 +393,7 @@
     }
     .seg button small {
       display: block;
-      font-family: var(--thai);
+      font-family: var(--script-font);
       font-size: 10px;
       font-weight: 500;
       opacity: 0.6;
@@ -530,18 +531,6 @@
     .lang-list .tick { color: var(--accent); font-size: 12px; opacity: 0; }
     .lang-list button[aria-pressed="true"] .tick { opacity: 1; }
 
-    .host-note {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      margin-top: 16px;
-      padding-top: 14px;
-      border-top: 1px solid var(--line);
-      font-size: 11px;
-      color: var(--faint);
-    }
-    .host-note strong { font-weight: 500; color: var(--dim); }
 
     /* ---------- how it works ---------- */
     .info-title {
@@ -620,8 +609,8 @@
       scroll-snap-align: start;
     }
 
-    .big-slide .thai {
-      font-family: var(--thai);
+    .big-slide .script {
+      font-family: var(--script-font);
       font-size: clamp(38px, 15vw, 96px);
       font-weight: 600;
       line-height: 1.45;

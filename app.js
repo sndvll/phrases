@@ -14,7 +14,7 @@
     const LOCALES = window.LOCALES || {};
 
     const state = {
-      host: localStorage.getItem('thai.host') || 'th',
+      host: localStorage.getItem('phrases.host') || 'th',
       guest: localStorage.getItem('thai.guest') === 'en' ? 'en' : 'sv',
       pol: localStorage.getItem('thai.pol') === 'f' ? 'f' : 'm',
       eggOk: localStorage.getItem('thai.egg') !== '0',
@@ -38,16 +38,20 @@
      * มังสวิรัติ (egg ok) and เจ (strict vegetarian) stay distinguishable.
      */
     const compose = (p) => {
-      const parts = hostData().parts;
-      const part = state.pol === 'm' ? parts.m : (p.q ? parts.fq : parts.f);
+      const parts = hostData().parts; // not every language has one (ja, zh)
+      const part = parts ? (state.pol === 'm' ? parts.m : (p.q ? parts.fq : parts.f)) : null;
+      const pScript = part ? part.script : '';
+      const pLatin = part ? part.latin : '';
 
-      const script = p.egg
-        ? p.script.replace('{p}', (state.eggOk ? p.egg.scriptOn : p.egg.scriptOff) + part.script)
-        : p.script.replace('{p}', part.script);
+      const script = (p.egg
+        ? p.script.replace('{p}', (state.eggOk ? p.egg.scriptOn : p.egg.scriptOff) + pScript)
+        : p.script.replace('{p}', pScript)
+      ).trim();
 
-      const latin = p.egg
-        ? p.latin.replace('{p}', (state.eggOk ? p.egg.latinOn : p.egg.latinOff) + ' ' + part.latin)
-        : p.latin.replace('{p}', part.latin);
+      const latin = (p.egg
+        ? p.latin.replace('{p}', ((state.eggOk ? p.egg.latinOn : p.egg.latinOff) + ' ' + pLatin).trim())
+        : p.latin.replace('{p}', pLatin)
+      ).replace(/\s+/g, ' ').trim();
 
       const suffix = p.egg ? (state.eggOk ? loc().egg.on : loc().egg.off) : '';
       return { script, latin, guest: labelOf(p) + suffix };
@@ -92,7 +96,7 @@
 
         // Vegetarian splits into "egg ok" and "strict" in the host language,
         // so the dietary page gets its own egg switch.
-        if (cat.id === 'spice') {
+        if (cat.id === 'spice' && phrasesOf(cat.id).some((p) => p.egg)) {
           const hints = hostData().hints || {};
           const row = document.createElement('div');
           row.className = 'mode-row';
@@ -119,13 +123,15 @@
           card.innerHTML =
             '<span class="check"></span>' +
             '<div class="card-main">' +
-              '<div class="card-top"><span class="label"></span><span class="th"></span></div>' +
+              '<div class="card-top"><span class="label"></span><span class="script"></span></div>' +
               '<span class="latin"></span>' +
             '</div>';
           card.querySelector('.label').textContent = labelOf(phrase);
           const c = compose(phrase);
-          card.querySelector('.th').textContent = c.script;
-          card.querySelector('.latin').textContent = c.latin;
+          card.querySelector('.script').textContent = c.script;
+          const latinEl = card.querySelector('.latin');
+          latinEl.textContent = c.latin;
+          latinEl.hidden = !c.latin;
           card.onclick = () => onCardClick(phrase, card);
           page.appendChild(card);
         });
@@ -143,8 +149,10 @@
           const phrase = list[j];
           const c = compose(phrase);
           card.querySelector('.label').textContent = labelOf(phrase);
-          card.querySelector('.th').textContent = c.script;
-          card.querySelector('.latin').textContent = c.latin;
+          card.querySelector('.script').textContent = c.script;
+          const latinEl = card.querySelector('.latin');
+          latinEl.textContent = c.latin;
+          latinEl.hidden = !c.latin;
         });
       });
 
@@ -229,8 +237,10 @@
         slide.className = 'big-slide';
         slide.innerHTML =
           '<div class="thai"></div><div class="latin"></div><div class="en"></div>';
-        slide.querySelector('.thai').textContent = c.script;
-        slide.querySelector('.latin').textContent = c.latin;
+        slide.querySelector('.script').textContent = c.script;
+        const slideLatin = slide.querySelector('.latin');
+        slideLatin.textContent = c.latin;
+        slideLatin.hidden = !c.latin;
         slide.querySelector('.en').textContent = c.guest;
         track.appendChild(slide);
       });
@@ -298,6 +308,30 @@
       refresh();
     }
 
+    function buildHostOptions() {
+      const box = $('host-options');
+      box.innerHTML = '';
+      Object.values(HOSTS).forEach((host) => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.setAttribute('aria-pressed', String(host.code === state.host));
+        b.innerHTML = '<span></span><span class="tick">✓</span>';
+        b.firstChild.textContent = host.native + ' · ' + host.name;
+        b.onclick = () => setHost(host.code);
+        box.appendChild(b);
+      });
+    }
+
+    function setHost(code) {
+      if (state.host === code) return closeLang();
+      state.host = code;
+      localStorage.setItem('phrases.host', code);
+      applyUi();
+      build();
+      refresh();
+      closeLang();
+    }
+
     function openLang() { $('lang-sheet').classList.add('open'); }
     function closeLang() { $('lang-sheet').classList.remove('open'); }
 
@@ -345,11 +379,18 @@
       $('btn-select').setAttribute('aria-label', ui.select);
       $('lbl-guest-lang').textContent = ui.guestLabel;
       $('lbl-host-lang').textContent = ui.hostLabel;
-      $('host-value').textContent = hostData().native + ' · ' + hostData().name;
       $('host-name').textContent = hostData().native;
+
+      // Script font is per destination (Thai, CJK, Vietnamese latin …).
+      document.documentElement.style.setProperty('--script-font', hostData().font || '');
+
+      // Japanese and Chinese have no gendered politeness particle.
+      document.querySelector('.pol').style.display = hostData().parts ? '' : 'none';
+
       document.documentElement.lang = state.guest;
       document.title = ui.appName || 'Fraslista';
       buildGuestOptions();
+      buildHostOptions();
     }
 
     /* ---------- multi-select -> fullscreen queue ---------- */

@@ -82,7 +82,7 @@ window.LOCALES.sv = {
     spicy: 'Starkt',
     veryspicy: 'Mycket starkt',
     vegetarian: 'Vegetariskt',
-    vegan: 'Veganskt (jeh)',
+    vegan: 'Veganskt',
     nofishsauce: 'Ingen fisksås',
     nomeat: 'Inget kött',
     nopork: 'Ingen fläsk',
