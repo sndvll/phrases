@@ -5,9 +5,6 @@ import { build, refresh } from './render.js';
 export function applyUi() {
   const ui = loc().ui;
 
-  document.querySelectorAll('[data-i18n="subtitle"]').forEach((el) => {
-    el.textContent = '· ' + ui.subtitle;
-  });
   document.querySelectorAll('[data-pol-label]').forEach((el) => {
     el.textContent = el.closest('[data-pol="m"]') ? ui.male : ui.female;
   });
@@ -23,7 +20,9 @@ export function applyUi() {
   $('btn-select').setAttribute('aria-label', ui.select);
   $('lbl-guest-lang').textContent = ui.guestLabel;
   $('lbl-host-lang').textContent = ui.hostLabel;
+  // The header names the destination, not the guest's word for "phrase list".
   $('host-name').textContent = hostData().native;
+  $('host-label').textContent = '· ' + hostData().name;
 
   // Script font is per destination (Thai, CJK, Vietnamese latin …).
   document.documentElement.style.setProperty('--script-font', hostData().font || '');

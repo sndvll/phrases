@@ -12,7 +12,6 @@ window.LOCALES.sv = {
 
   ui: {
     appName: 'Fraslista',
-    subtitle: 'fraslista',
     tabs: {
       greet: 'Hälsningar',
       food: 'Mat & nota',

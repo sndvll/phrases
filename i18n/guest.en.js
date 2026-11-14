@@ -7,7 +7,6 @@ window.LOCALES.en = {
 
   ui: {
     appName: 'Phrases',
-    subtitle: 'phrase list',
     tabs: {
       greet: 'Greetings',
       food: 'Food & bill',
