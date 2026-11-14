@@ -166,12 +166,29 @@
 
     let raf = 0;
     let lastPage = -1;
+    let navTimer = 0;
+
+    /** Scroll only as far as needed to bring the active tab fully into view. */
+    function revealActiveTab() {
+      const active = tabs.querySelector('[aria-selected="true"]');
+      if (!active || tabs.scrollWidth <= tabs.clientWidth) return;
+
+      const navRect = tabs.getBoundingClientRect();
+      const tabRect = active.getBoundingClientRect();
+      const pad = 14;
+
+      let delta = 0;
+      if (tabRect.left < navRect.left + pad) delta = tabRect.left - navRect.left - pad;
+      else if (tabRect.right > navRect.right - pad) delta = tabRect.right - navRect.right + pad;
+      if (Math.abs(delta) < 1) return;
+
+      tabs.scrollBy({ left: delta, behavior: 'smooth' });
+    }
 
     /**
      * Runs on every scroll frame, but only touches the DOM when the page index
      * actually changes. Writing --accent on <html> invalidates styles for every
-     * card, and starting a smooth scroll on the tab row mid-swipe both fight the
-     * gesture — that was the lag.
+     * card, and moving the tab row mid-gesture fights the swipe — that was the lag.
      */
     carousel.addEventListener('scroll', () => {
       cancelAnimationFrame(raf);
@@ -183,12 +200,10 @@
         [...tabs.children].forEach((t, j) => t.setAttribute('aria-selected', String(j === i)));
         [...dots.children].forEach((d, j) => d.setAttribute('aria-current', String(j === i)));
 
-        // Keep the active tab visible; the tab row scrolls with seven categories.
-        const active = tabs.children[i];
-        if (active && tabs.scrollWidth > tabs.clientWidth) {
-          const left = active.offsetLeft - (tabs.clientWidth - active.offsetWidth) / 2;
-          tabs.scrollTo({ left: Math.max(0, left), behavior: 'smooth' });
-        }
+        // Wait for the swipe to settle before nudging the tab row; starting an
+        // animation while the finger is still moving makes it feel slow.
+        clearTimeout(navTimer);
+        navTimer = setTimeout(revealActiveTab, 130);
 
         const cats = hostData().categories;
         document.documentElement.style.setProperty(
