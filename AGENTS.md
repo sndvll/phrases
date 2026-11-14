@@ -29,9 +29,14 @@ en nginx-container i homelabben; den vägen är riven.
 ## Struktur
 
 ```
-index.html               markup — inga inline-stilar, ingen inline-JS
+index.html               markup — inga inline-stilar, ingen inline-JS, inga onclick
 styles.css               all CSS (teman som variabler)
-app.js                   all logik; laddas med defer efter i18n-filerna
+js/app.js                entry point: DOM-wiring, init, statusrad, service worker
+js/state.js              state + localStorage + hostData()/loc()
+js/phrases.js            compose(), labelOf(), phrasesOf()
+js/render.js             karusell, flikar, kort; build() + refresh()
+js/ui.js                 applyUi(), språkmeny, info-sheet
+js/show.js               helskärm, flermarkering, långtryck
 i18n/host.th.js          thailändska     i18n/host.ja.js  japanska
 i18n/host.vi.js          vietnamesiska   i18n/host.zh.js  kinesiska (förenklad)
 i18n/guest.sv.js         gästspråk svenska (UI + betydelser)
@@ -43,9 +48,13 @@ icons/                   icon-180.png (apple-touch), icon-512.png
 .nojekyll                hindrar Jekyll från att processa sajten
 ```
 
-`app.js` är en klassisk script-fil (inte en modul) eftersom markupen anropar
-funktioner via `onclick` — de måste ligga på `window`. Ordningen är: i18n-filerna
-först (klassiska, körs vid parse), sedan `app.js` med `defer`.
+`js/app.js` laddas som `type="module"`. Moduler är defererade som standard och
+körs efter i18n-filerna (klassiska script, körs vid parse), så `window.HOSTS` och
+`window.LOCALES` finns när modulerna importeras.
+
+**Inga `onclick` i markupen** — moduler har egen scope, så all wiring sker i
+`js/app.js` med `addEventListener`. Kortens klick hanteras via delegering på
+karusellen, inte en closure per kort.
 
 ## Två språkaxlar
 
@@ -64,7 +73,10 @@ Regler:
   ett fält finns.
 - **CJK-typsnitt hämtas aldrig** — de ligger i systemet (Hiragino/PingFang/Noto).
   Vietnamesiska har egna woff2 i `fonts/` eftersom Outfit saknar dess diakriter.
-- `compose()` är den enda vägen från fras → visad text. Lägg aldrig in partikeln
+- `applyCardText()` i `render.js` är den enda platsen som skriver text i ett kort —
+`build()` och `refresh()` använder båda den, så de kan inte glida isär.
+
+`compose()` är den enda vägen från fras → visad text. Lägg aldrig in partikeln
   direkt i strängarna, då slutar krub/kha-växlaren fungera.
 - Nya fraser kräver **samma `id`** i host- och gästfilerna. Saknad gäst-nyckel
   faller tillbaka på svenska, sedan på frasens eget `label`, sedan på id:t.
@@ -114,6 +126,9 @@ Två valfria fält styr varianter:
   talar: thai bygger vidare på `มังสวิรัติ`, japanska skriver en hel mening. Saknas
   `egg` göms växlaren automatiskt.
 
+`applyCardText()` i `render.js` är den enda platsen som skriver text i ett kort —
+`build()` och `refresh()` använder båda den, så de kan inte glida isär.
+
 `compose()` är den enda vägen från fras → visad text. Lägg aldrig in partikeln
 direkt i strängarna, då slutar krub/kha-växlaren fungera.
 
@@ -145,10 +160,12 @@ det finns ingen mellanliggande detaljmodal, helskärmen *är* detaljvyn. Räknar
 
 ## Konventioner
 
-- **Tre filer, inte fler.** `index.html` (markup), `styles.css` (all CSS),
-  `app.js` (all logik). Dela inte upp i moduler eller komponenter förrän det
-  finns ett konkret behov — appen är liten nog att överskåda.
-- **Ingen inline-CSS eller inline-JS i markupen.** Undantaget är `onclick` på
-  knappar som anropar globala funktioner i `app.js`.
+- **Sex moduler, inga fler utan skäl.** `state` (data/state), `phrases` (fras → text),
+  `render` (listan), `ui` (header + sheets), `show` (helskärm/gester), `app` (wiring).
+  Ingen build, inga beroenden — webbläsaren laddar modulerna direkt.
+- **Beroenderiktningen är enkelriktad:** `state` ← `phrases` ← `render` ← `ui`/`show`
+  ← `app`. `show.js` får läsa `carousel` från `render.js`, men `render.js` får aldrig
+  importera `show.js` (det skulle ge en cykel).
+- **Ingen inline-CSS eller inline-JS i markupen** — inte heller `onclick`.
 - **Inga commits på eget bevåg** — commit/push bara på uttrycklig begäran.
 - Ändringar slår igenom via `git push`; GitHub Pages bygger om på ~30–60 s.

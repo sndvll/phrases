@@ -98,7 +98,13 @@ arbetsflöden.
 phrases/
 ├── index.html       markup, inga inline-stilar eller inline-JS
 ├── styles.css       all CSS, teman som variabler
-├── app.js           all logik (state, rendering, gesthantering)
+├── js/
+│   ├── app.js       entry point och DOM-wiring
+│   ├── state.js     state, localStorage, hostData()/loc()
+│   ├── phrases.js   compose(), labelOf()
+│   ├── render.js    karusell, flikar, kort
+│   ├── ui.js        header, språkmeny, info-sheet
+│   └── show.js      helskärm, flermarkering, långtryck
 ├── i18n/
 │   ├── host.th.js   thailändska
 │   ├── host.ja.js   japanska
